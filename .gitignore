@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build Outputs
+dist/
+build/
+coverage/
+
+# AI Coding Assistant Artifacts (Local only)
+.gemini/
+.cursor/
+.vscode/
+
+# OS Files
+.DS_Store
+Thumbs.db

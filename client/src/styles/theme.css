@@ -1,0 +1,44 @@
+:root {
+  /* Backgrounds */
+  --bg-primary: #0a0a1a;
+  --bg-secondary: #0d0d24;
+  --bg-surface: #13132b;
+  --bg-surface-2: #1a1a3a;
+
+  /* Accent colors */
+  --accent-purple: #8b5cf6;
+  --accent-indigo: #6366f1;
+  --accent-violet: #7c3aed;
+  --accent-light: #a78bfa;
+
+  /* Text */
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-accent: #a78bfa;
+
+  /* Borders */
+  --border-subtle: rgba(139, 92, 246, 0.1);
+  --border-default: rgba(139, 92, 246, 0.2);
+  --border-active: rgba(139, 92, 246, 0.5);
+
+  /* Glows */
+  --glow-color: rgba(139, 92, 246, 0.3);
+  --glow-color-lg: rgba(139, 92, 246, 0.5);
+  --glow-indigo: rgba(99, 102, 241, 0.3);
+
+  /* Shadows */
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 20px rgba(139, 92, 246, 0.3);
+  --shadow-glow-lg: 0 0 40px rgba(139, 92, 246, 0.4);
+
+  /* Orbit sizes */
+  --orbit-1: 140px;
+  --orbit-2: 200px;
+  --orbit-3: 265px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 300ms ease;
+  --transition-slow: 500ms ease;
+}
