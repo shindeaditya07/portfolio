@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { sendEmail } from '../utils/sendEmail'
+import Admin from '../models/Admin'
 import fs from 'fs/promises'
 import path from 'path'
 
@@ -11,7 +12,14 @@ const router = Router()
 // @route POST /api/auth/login
 router.post('/login', async (req: Request, res: Response) => {
   const { password } = req.body
-  const adminPassword = process.env.ADMIN_PASSWORD
+  let adminPassword = process.env.ADMIN_PASSWORD
+  
+  // Prefer the database hash if they reset their password
+  const adminDb = await Admin.findOne()
+  if (adminDb && adminDb.passwordHash) {
+    adminPassword = adminDb.passwordHash
+  }
+
   if (!adminPassword) {
     res.status(500).json({ message: 'Server config error' })
     return
@@ -80,21 +88,17 @@ router.post('/reset-password', async (req: Request, res: Response) => {
     const salt = await bcrypt.genSalt(12)
     const newHash = await bcrypt.hash(newPassword, salt)
 
-    // Update .env file
-    const envPath = path.join(__dirname, '../../.env')
-    let envContent = await fs.readFile(envPath, 'utf8')
-    
-    // Replace the ADMIN_PASSWORD line
-    const regex = /ADMIN_PASSWORD=.*(\r\n|\n|$)/
-    if (regex.test(envContent)) {
-      envContent = envContent.replace(regex, `ADMIN_PASSWORD=${newHash}\n`)
+    // Production-ready: Store the new hash strictly in MongoDB 
+    // since Render does not have an underlying .env file
+    let adminRecord = await Admin.findOne()
+    if (adminRecord) {
+      adminRecord.passwordHash = newHash
+      await adminRecord.save()
     } else {
-      envContent += `\nADMIN_PASSWORD=${newHash}\n`
+      await Admin.create({ passwordHash: newHash })
     }
-
-    await fs.writeFile(envPath, envContent)
     
-    // Update active memory
+    // Update active memory just for safety
     process.env.ADMIN_PASSWORD = newHash
 
     res.json({ message: 'Password reset successfully' })
