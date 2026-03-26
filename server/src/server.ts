@@ -18,11 +18,16 @@ const PORT = process.env.PORT || 5000
 
 // Middleware
 app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'http://localhost:5174',
-    process.env.FRONTEND_URL || '',
-  ].filter(Boolean),
+  origin: (requestOrigin, callback) => {
+    // Always allow requests with no origin, or typical local/Vercel domains
+    if (!requestOrigin || 
+        requestOrigin.includes('localhost') || 
+        requestOrigin.includes('vercel.app') || 
+        (process.env.FRONTEND_URL && requestOrigin === process.env.FRONTEND_URL.trim())) {
+      return callback(null, true)
+    }
+    return callback(new Error('Not allowed by CORS'))
+  },
   credentials: true,
 }))
 app.use(express.json())
